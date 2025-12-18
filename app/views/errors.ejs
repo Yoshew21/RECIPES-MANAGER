@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <%- include('./partials/head', {title: 'Erreur | Recipe Manager'}); %>
+</head>
+<body>
+<div class="container mx-auto px-4 py-8 max-w-4xl">
+    <div class="text-center py-16">
+        <div class="inline-block bg-white/70 backdrop-blur-sm rounded-3xl p-12 shadow-xl border border-rose-100/50">
+            <h1 class="text-6xl font-light text-rose-300 mb-6">OUPS !</h1>
+            <div class="max-w-xl mx-auto mb-8">
+                <p class="text-xl text-slate-500 font-light mb-2">Une erreur est survenue !</p>
+                <p class="text-lg text-slate-400 font-light">Un administrateur a été prévenu.</p>
+            </div>
+            <a href="/recipes" class="inline-block bg-emerald-200 hover:bg-emerald-300 text-emerald-700 font-medium py-3 px-8 rounded-2xl text-lg transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                RETOUR À L'ACCUEIL
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

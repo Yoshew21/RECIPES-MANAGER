@@ -1,0 +1,33 @@
+<form class="space-y-6" method="post" action="<%= action %>">
+    <div>
+        <label for="name" class="block text-slate-500 mb-2 font-medium">Nom de la catégorie</label>
+        <input
+                type="text"
+                class="w-full px-5 py-4 text-base border-2 border-purple-200 rounded-2xl bg-white/80 backdrop-blur-sm text-slate-600 focus:outline-none focus:border-purple-300 transition-all shadow-sm"
+                id="name"
+                name="name"
+                placeholder="Nom de la categorie"
+        <% if(category) { %> value="<%= category.name %>" <% } %>
+                required
+        >
+    </div>
+    <div>
+        <label for="description" class="block text-slate-500 mb-2 font-medium">Description de la catégorie</label>
+        <input
+                type="text"
+                class="w-full px-5 py-4 text-base border-2 border-purple-200 rounded-2xl bg-white/80 backdrop-blur-sm text-slate-600 focus:outline-none focus:border-purple-300 transition-all shadow-sm"
+                id="description"
+                name="description"
+                placeholder="Description de la categorie (optionnel)"
+        <% if(category) { %> value="<%= category.description %>" <% } %>
+        >
+    </div>
+    <div class="flex flex-col md:flex-row gap-4 justify-center pt-6">
+        <button type="submit" class="bg-emerald-200 hover:bg-emerald-300 text-emerald-700 font-medium px-8 py-4 rounded-2xl text-lg transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+            <%= submitLabel %>
+        </button>
+        <a href="/categories" class="border-2 border-slate-300 hover:bg-slate-100 text-slate-600 font-medium px-8 py-4 rounded-2xl text-lg text-center transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+            RETOUR
+        </a>
+    </div>
+</form>

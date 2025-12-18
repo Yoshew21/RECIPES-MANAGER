@@ -1,0 +1,321 @@
+<form class="space-y-6" method="post" action="<%= action %>">
+    <div>
+        <label for="title" class="block text-slate-500 mb-2 font-medium">Titre</label>
+        <input
+                type="text"
+                class="w-full px-5 py-4 text-base border-2 border-pink-200 rounded-2xl bg-white/80 backdrop-blur-sm text-slate-600 focus:outline-none focus:border-pink-300 transition-all shadow-sm"
+                id="title"
+                name="title"
+                placeholder="Titre de la recette"
+            <% if(recipe) { %> value="<%= recipe.title %>" <% } %>
+                required
+        >
+    </div>
+    <div>
+        <label for="author" class="block text-slate-500 mb-2 font-medium">Créateur</label>
+        <input
+                type="text"
+                class="w-full px-5 py-4 text-base border-2 border-pink-200 rounded-2xl bg-white/80 backdrop-blur-sm text-slate-600 focus:outline-none focus:border-pink-300 transition-all shadow-sm"
+                id="author"
+                name="author"
+                placeholder="Créateur de la recette"
+            <% if(recipe) { %> value="<%= recipe.author %>" <% } %>
+                required
+        >
+    </div>
+    <div>
+        <label for="category" class="block text-slate-500 mb-2 font-medium">Catégorie</label>
+        <select
+                class="w-full px-5 py-4 text-base border-2 border-pink-200 rounded-2xl bg-white/80 backdrop-blur-sm text-slate-600 focus:outline-none focus:border-pink-300 transition-all shadow-sm"
+                id="category"
+                name="categoryId"
+                required
+        >
+            <% categories.forEach(category => { %>
+                <option value="<%= category.id %>" <%= (recipe && recipe.categoryId === category.id) ? 'selected' : '' %>>
+                    <%= category.name %>
+                </option>
+            <% }) %>
+        </select>
+    </div>
+
+    <!-- Section Temps -->
+    <div>
+        <div class="flex justify-between items-center mb-4">
+            <label class="block text-slate-500 font-medium">Temps de cuisson</label>
+            <button type="button" onclick="addTime()" class="bg-purple-200 hover:bg-purple-300 text-purple-700 font-medium py-1.5 px-4 rounded-xl text-sm transition-all shadow-sm hover:shadow-md">
+                + Ajouter un temps
+            </button>
+        </div>
+        <div id="timesContainer" class="space-y-3">
+            <% if (recipe && recipe.times && recipe.times.length > 0) { %>
+                <% recipe.times.forEach((time, index) => { %>
+                    <div class="time-row flex gap-2 items-end p-3 bg-purple-50/50 rounded-xl border border-purple-100">
+                        <div class="flex-1">
+                            <label class="block text-xs text-slate-400 mb-1">Type</label>
+                            <input type="text" name="times[<%= index %>][type]" value="<%= time.type %>" placeholder="Préparation, Cuisson, Repos..." class="w-full px-3 py-2 text-sm border-2 border-purple-200 rounded-lg bg-white/80 text-slate-600 focus:outline-none focus:border-purple-300">
+                        </div>
+                        <div class="w-24">
+                            <label class="block text-xs text-slate-400 mb-1">Valeur</label>
+                            <input type="number" name="times[<%= index %>][value]" value="<%= time.value %>" placeholder="30" min="0" class="w-full px-3 py-2 text-sm border-2 border-purple-200 rounded-lg bg-white/80 text-slate-600 focus:outline-none focus:border-purple-300">
+                        </div>
+                        <div class="w-32">
+                            <label class="block text-xs text-slate-400 mb-1">Unité</label>
+                            <select name="times[<%= index %>][unit]" class="w-full px-3 py-2 text-sm border-2 border-purple-200 rounded-lg bg-white/80 text-slate-600 focus:outline-none focus:border-purple-300">
+                                <option value="minutes" <%= time.unit === 'minutes' ? 'selected' : '' %>>Minutes</option>
+                                <option value="heures" <%= time.unit === 'heures' ? 'selected' : '' %>>Heures</option>
+                            </select>
+                        </div>
+                        <button type="button" onclick="removeTime(this)" class="bg-rose-200 hover:bg-rose-300 text-rose-700 font-medium py-2 px-3 rounded-lg text-sm transition-all">✕</button>
+                    </div>
+                <% }) %>
+            <% } %>
+        </div>
+    </div>
+
+    <!-- Section Ingrédients -->
+    <div>
+        <div class="flex justify-between items-center mb-4">
+            <label class="block text-slate-500 font-medium">Ingrédients</label>
+            <button type="button" onclick="addIngredient()" class="bg-emerald-200 hover:bg-emerald-300 text-emerald-700 font-medium py-1.5 px-4 rounded-xl text-sm transition-all shadow-sm hover:shadow-md">
+                + Ajouter un ingrédient
+            </button>
+        </div>
+        <div id="ingredientsContainer" class="space-y-3">
+            <% if (recipe && recipe.ingredients && recipe.ingredients.length > 0) { %>
+                <% recipe.ingredients.forEach((ingredient, index) => { %>
+                    <div class="ingredient-row flex gap-2 items-end p-3 bg-emerald-50/50 rounded-xl border border-emerald-100">
+                        <div class="flex-1">
+                            <label class="block text-xs text-slate-400 mb-1">Nom</label>
+                            <input type="text" name="ingredients[<%= index %>][name]" value="<%= ingredient.name %>" placeholder="Nom de l'ingrédient" class="w-full px-3 py-2 text-sm border-2 border-emerald-200 rounded-lg bg-white/80 text-slate-600 focus:outline-none focus:border-emerald-300">
+                        </div>
+                        <div class="w-32">
+                            <label class="block text-xs text-slate-400 mb-1">Quantité</label>
+                            <input type="number" name="ingredients[<%= index %>][quantity]" value="<%= ingredient.quantity %>" placeholder="100" step="0.01" min="0" class="w-full px-3 py-2 text-sm border-2 border-emerald-200 rounded-lg bg-white/80 text-slate-600 focus:outline-none focus:border-emerald-300">
+                        </div>
+                        <div class="w-40">
+                            <label class="block text-xs text-slate-400 mb-1">Unité</label>
+                            <select name="ingredients[<%= index %>][unit]" class="w-full px-3 py-2 text-sm border-2 border-emerald-200 rounded-lg bg-white/80 text-slate-600 focus:outline-none focus:border-emerald-300">
+                                <option value="">Aucune</option>
+                                <option value="g" <%= ingredient.unit === 'g' ? 'selected' : '' %>>g</option>
+                                <option value="kg" <%= ingredient.unit === 'kg' ? 'selected' : '' %>>kg</option>
+                                <option value="ml" <%= ingredient.unit === 'ml' ? 'selected' : '' %>>ml</option>
+                                <option value="l" <%= ingredient.unit === 'l' ? 'selected' : '' %>>l</option>
+                                <option value="c.à.s" <%= ingredient.unit === 'c.à.s' ? 'selected' : '' %>>c.à.s</option>
+                                <option value="c.à.c" <%= ingredient.unit === 'c.à.c' ? 'selected' : '' %>>c.à.c</option>
+                                <option value="unité" <%= ingredient.unit === 'unité' ? 'selected' : '' %>>unité</option>
+                                <option value="pincée" <%= ingredient.unit === 'pincée' ? 'selected' : '' %>>pincée</option>
+                            </select>
+                        </div>
+                        <button type="button" onclick="removeIngredient(this)" class="bg-rose-200 hover:bg-rose-300 text-rose-700 font-medium py-2 px-3 rounded-lg text-sm transition-all">✕</button>
+                    </div>
+                <% }) %>
+            <% } %>
+        </div>
+    </div>
+
+    <!-- Section Étapes -->
+    <div>
+        <div class="flex justify-between items-center mb-4">
+            <label class="block text-slate-500 font-medium">Étapes de préparation</label>
+            <button type="button" onclick="addStep()" class="bg-amber-200 hover:bg-amber-300 text-amber-700 font-medium py-1.5 px-4 rounded-xl text-sm transition-all shadow-sm hover:shadow-md">
+                + Ajouter une étape
+            </button>
+        </div>
+        <div id="stepsContainer" class="space-y-3">
+            <% if (recipe && recipe.steps && recipe.steps.length > 0) { %>
+                <% recipe.steps.forEach((step, index) => { %>
+                    <div class="step-row flex gap-2 items-start p-3 bg-amber-50/50 rounded-xl border border-amber-100">
+                        <div class="flex-shrink-0 w-8 h-8 bg-amber-200 text-amber-700 rounded-full flex items-center justify-center font-semibold text-sm mt-1">
+                            <%= step.stepNumber %>
+                        </div>
+                        <div class="flex-1">
+                            <label class="block text-xs text-slate-400 mb-1">Description</label>
+                            <textarea name="steps[<%= index %>][description]" rows="2" placeholder="Description de l'étape..." class="w-full px-3 py-2 text-sm border-2 border-amber-200 rounded-lg bg-white/80 text-slate-600 focus:outline-none focus:border-amber-300 resize-none"><%= step.description %></textarea>
+                        </div>
+                        <button type="button" onclick="removeStep(this)" class="bg-rose-200 hover:bg-rose-300 text-rose-700 font-medium py-2 px-3 rounded-lg text-sm transition-all mt-6">✕</button>
+                    </div>
+                <% }) %>
+            <% } %>
+        </div>
+    </div>
+
+    <div>
+        <label for="imageFile" class="block text-slate-500 mb-2 font-medium">Image de la recette</label>
+        <input
+                type="file"
+                class="w-full px-5 py-4 text-base border-2 border-pink-200 rounded-2xl bg-white/80 backdrop-blur-sm text-slate-600 focus:outline-none focus:border-pink-300 transition-all shadow-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-medium file:bg-pink-200 file:text-pink-700 hover:file:bg-pink-300 cursor-pointer"
+                id="imageFile"
+                name="imageFile"
+                accept="image/*"
+        >
+    </div>
+    <% if (recipe && recipe.imageBase64) { %>
+        <div class="mb-4 text-center p-4 bg-gradient-to-br from-pink-50 to-purple-50 rounded-2xl">
+            <img id="preview" src="data:image/png;base64,<%= recipe.imageBase64 %>" class="max-w-xs h-auto rounded-2xl shadow-lg mx-auto" alt="Image actuelle">
+        </div>
+    <% } %>
+    <input type="hidden" id="imageBase64" name="imageBase64" value="<%= recipe ? recipe.imageBase64 : '' %>">
+
+    <div class="flex flex-col md:flex-row gap-4 justify-center pt-6">
+        <button type="submit" class="bg-emerald-200 hover:bg-emerald-300 text-emerald-700 font-medium px-8 py-4 rounded-2xl text-lg transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+            <%= submitLabel %>
+        </button>
+        <a href="/recipes" class="border-2 border-slate-300 hover:bg-slate-100 text-slate-600 font-medium px-8 py-4 rounded-2xl text-lg text-center transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+            RETOUR
+        </a>
+    </div>
+</form>
+
+<script>
+// Gestion de l'image
+document.getElementById('imageFile').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const base64 = e.target.result.split(',')[1];
+            document.getElementById('imageBase64').value = base64;
+            // Update preview
+            const preview = document.getElementById('preview');
+            if (preview) {
+                preview.src = e.target.result;
+            } else {
+                // Create new preview if not exists
+                const previewDiv = document.createElement('div');
+                previewDiv.className = 'mb-4 text-center p-4 bg-gradient-to-br from-pink-50 to-purple-50 rounded-2xl';
+                const img = document.createElement('img');
+                img.id = 'preview';
+                img.src = e.target.result;
+                img.className = 'max-w-xs h-auto rounded-2xl shadow-lg mx-auto';
+                img.alt = 'Prévisualisation';
+                previewDiv.appendChild(img);
+                document.getElementById('imageFile').parentNode.appendChild(previewDiv);
+            }
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+// Gestion des temps
+let timeIndex = <%= recipe && recipe.times ? recipe.times.length : 0 %>;
+function addTime() {
+    const container = document.getElementById('timesContainer');
+    const row = document.createElement('div');
+    row.className = 'time-row flex gap-2 items-end p-3 bg-purple-50/50 rounded-xl border border-purple-100';
+    row.innerHTML = `
+        <div class="flex-1">
+            <label class="block text-xs text-slate-400 mb-1">Type</label>
+            <input type="text" name="times[${timeIndex}][type]" placeholder="Préparation, Cuisson, Repos..." class="w-full px-3 py-2 text-sm border-2 border-purple-200 rounded-lg bg-white/80 text-slate-600 focus:outline-none focus:border-purple-300">
+        </div>
+        <div class="w-24">
+            <label class="block text-xs text-slate-400 mb-1">Valeur</label>
+            <input type="number" name="times[${timeIndex}][value]" placeholder="30" min="0" class="w-full px-3 py-2 text-sm border-2 border-purple-200 rounded-lg bg-white/80 text-slate-600 focus:outline-none focus:border-purple-300">
+        </div>
+        <div class="w-32">
+            <label class="block text-xs text-slate-400 mb-1">Unité</label>
+            <select name="times[${timeIndex}][unit]" class="w-full px-3 py-2 text-sm border-2 border-purple-200 rounded-lg bg-white/80 text-slate-600 focus:outline-none focus:border-purple-300">
+                <option value="minutes">Minutes</option>
+                <option value="heures">Heures</option>
+            </select>
+        </div>
+        <button type="button" onclick="removeTime(this)" class="bg-rose-200 hover:bg-rose-300 text-rose-700 font-medium py-2 px-3 rounded-lg text-sm transition-all">✕</button>
+    `;
+    container.appendChild(row);
+    timeIndex++;
+}
+function removeTime(button) {
+    button.closest('.time-row').remove();
+    reindexTimes();
+}
+function reindexTimes() {
+    const rows = document.querySelectorAll('.time-row');
+    rows.forEach((row, index) => {
+        row.querySelector('input[name*="[type]"]').name = `times[${index}][type]`;
+        row.querySelector('input[name*="[value]"]').name = `times[${index}][value]`;
+        row.querySelector('select[name*="[unit]"]').name = `times[${index}][unit]`;
+    });
+    timeIndex = rows.length;
+}
+
+// Gestion des ingrédients
+let ingredientIndex = <%= recipe && recipe.ingredients ? recipe.ingredients.length : 0 %>;
+function addIngredient() {
+    const container = document.getElementById('ingredientsContainer');
+    const row = document.createElement('div');
+    row.className = 'ingredient-row flex gap-2 items-end p-3 bg-emerald-50/50 rounded-xl border border-emerald-100';
+    row.innerHTML = `
+        <div class="flex-1">
+            <label class="block text-xs text-slate-400 mb-1">Nom</label>
+            <input type="text" name="ingredients[${ingredientIndex}][name]" placeholder="Nom de l'ingrédient" class="w-full px-3 py-2 text-sm border-2 border-emerald-200 rounded-lg bg-white/80 text-slate-600 focus:outline-none focus:border-emerald-300">
+        </div>
+        <div class="w-32">
+            <label class="block text-xs text-slate-400 mb-1">Quantité</label>
+            <input type="number" name="ingredients[${ingredientIndex}][quantity]" placeholder="100" step="0.01" min="0" class="w-full px-3 py-2 text-sm border-2 border-emerald-200 rounded-lg bg-white/80 text-slate-600 focus:outline-none focus:border-emerald-300">
+        </div>
+        <div class="w-40">
+            <label class="block text-xs text-slate-400 mb-1">Unité</label>
+            <select name="ingredients[${ingredientIndex}][unit]" class="w-full px-3 py-2 text-sm border-2 border-emerald-200 rounded-lg bg-white/80 text-slate-600 focus:outline-none focus:border-emerald-300">
+                <option value="">Aucune</option>
+                <option value="g">g</option>
+                <option value="kg">kg</option>
+                <option value="ml">ml</option>
+                <option value="l">l</option>
+                <option value="c.à.s">c.à.s</option>
+                <option value="c.à.c">c.à.c</option>
+                <option value="unité">unité</option>
+                <option value="pincée">pincée</option>
+            </select>
+        </div>
+        <button type="button" onclick="removeIngredient(this)" class="bg-rose-200 hover:bg-rose-300 text-rose-700 font-medium py-2 px-3 rounded-lg text-sm transition-all">✕</button>
+    `;
+    container.appendChild(row);
+    ingredientIndex++;
+}
+function removeIngredient(button) {
+    button.closest('.ingredient-row').remove();
+    reindexIngredients();
+}
+function reindexIngredients() {
+    const rows = document.querySelectorAll('.ingredient-row');
+    rows.forEach((row, index) => {
+        row.querySelector('input[name*="[name]"]').name = `ingredients[${index}][name]`;
+        row.querySelector('input[name*="[quantity]"]').name = `ingredients[${index}][quantity]`;
+        row.querySelector('select[name*="[unit]"]').name = `ingredients[${index}][unit]`;
+    });
+    ingredientIndex = rows.length;
+}
+
+// Gestion des étapes
+let stepIndex = <%= recipe && recipe.steps ? recipe.steps.length : 0 %>;
+function addStep() {
+    const container = document.getElementById('stepsContainer');
+    const row = document.createElement('div');
+    row.className = 'step-row flex gap-2 items-start p-3 bg-amber-50/50 rounded-xl border border-amber-100';
+    const stepNumber = container.querySelectorAll('.step-row').length + 1;
+    row.innerHTML = `
+        <div class="flex-shrink-0 w-8 h-8 bg-amber-200 text-amber-700 rounded-full flex items-center justify-center font-semibold text-sm mt-1">
+            ${stepNumber}
+        </div>
+        <div class="flex-1">
+            <label class="block text-xs text-slate-400 mb-1">Description</label>
+            <textarea name="steps[${stepIndex}][description]" rows="2" placeholder="Description de l'étape..." class="w-full px-3 py-2 text-sm border-2 border-amber-200 rounded-lg bg-white/80 text-slate-600 focus:outline-none focus:border-amber-300 resize-none"></textarea>
+        </div>
+        <button type="button" onclick="removeStep(this)" class="bg-rose-200 hover:bg-rose-300 text-rose-700 font-medium py-2 px-3 rounded-lg text-sm transition-all mt-6">✕</button>
+    `;
+    container.appendChild(row);
+    stepIndex++;
+}
+function removeStep(button) {
+    button.closest('.step-row').remove();
+    reindexSteps();
+}
+function reindexSteps() {
+    const rows = document.querySelectorAll('.step-row');
+    rows.forEach((row, index) => {
+        row.querySelector('.bg-amber-200').textContent = index + 1;
+        row.querySelector('textarea[name*="[description]"]').name = `steps[${index}][description]`;
+    });
+    stepIndex = rows.length;
+}
+</script>

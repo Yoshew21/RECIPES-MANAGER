@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <%- include('../partials/head', {title: 'Recipe ' + recipe.title + ' | Recipe Manager'}); %>
+</head>
+<body>
+<div class="container mx-auto px-4 py-8 max-w-5xl">
+    <div class="text-center mb-8">
+        <h1 class="text-5xl font-light text-rose-300 mb-2">DÉTAILS DE LA RECETTE</h1>
+    </div>
+    <div class="bg-white/70 backdrop-blur-sm shadow-xl rounded-3xl overflow-hidden border border-pink-100/50">
+        <div class="text-center bg-gradient-to-r from-pink-50 to-purple-50 py-8 px-6 border-b border-pink-100">
+            <h2 class="text-3xl font-light text-slate-600"><%= recipe.title %></h2>
+        </div>
+        <div class="p-8">
+            <% if (recipe.imageBase64) { %>
+                <div class="mb-8 text-center">
+                    <div class="inline-block p-4 bg-gradient-to-br from-pink-50 to-purple-50 rounded-3xl">
+                        <img src="data:image/png;base64,<%= recipe.imageBase64 %>" class="rounded-2xl max-w-full h-auto mx-auto shadow-lg" alt="<%= recipe.title %>" style="max-width: 100%; height: auto;">
+                    </div>
+                </div>
+            <% } %>
+
+            <div class="space-y-6">
+                <div class="p-5 bg-gradient-to-r from-pink-50/50 to-purple-50/50 rounded-2xl border border-pink-100">
+                    <h5 class="text-base font-medium mb-2 text-slate-400 uppercase tracking-wide">Créateur</h5>
+                    <p class="text-xl text-slate-600 font-light"><%= recipe.author %></p>
+                </div>
+                <div class="p-5 bg-gradient-to-r from-pink-50/50 to-purple-50/50 rounded-2xl border border-pink-100">
+                    <h5 class="text-base font-medium mb-2 text-slate-400 uppercase tracking-wide">Catégorie</h5>
+                    <p class="text-xl text-slate-600 font-light">
+                        <% if (recipe.category) { %>
+                            <%= recipe.category.name %>
+                        <% } else { %>
+                            Aucune catégorie
+                        <% } %>
+                    </p>
+                </div>
+
+                <!-- Temps de cuisson -->
+                <% if (recipe.times && recipe.times.length > 0) { %>
+                    <div class="p-5 bg-gradient-to-r from-purple-50/50 to-pink-50/50 rounded-2xl border border-purple-100">
+                        <h5 class="text-base font-medium mb-4 text-slate-400 uppercase tracking-wide">Temps</h5>
+                        <div class="grid md:grid-cols-2 gap-3">
+                            <% recipe.times.forEach(time => { %>
+                                <div class="bg-white/60 p-3 rounded-lg">
+                                    <span class="text-sm font-medium text-purple-600"><%= time.type %> :</span>
+                                    <span class="text-lg text-slate-700 ml-2"><%= time.value %> <%= time.unit %></span>
+                                </div>
+                            <% }) %>
+                        </div>
+                    </div>
+                <% } %>
+
+                <!-- Ingrédients -->
+                <% if (recipe.ingredients && recipe.ingredients.length > 0) { %>
+                    <div class="p-5 bg-gradient-to-r from-emerald-50/50 to-pink-50/50 rounded-2xl border border-emerald-100">
+                        <h5 class="text-base font-medium mb-4 text-slate-400 uppercase tracking-wide">Ingrédients</h5>
+                        <ul class="space-y-2">
+                            <% recipe.ingredients.forEach(ingredient => { %>
+                                <li class="bg-white/60 p-3 rounded-lg flex items-center">
+                                    <span class="text-emerald-600 mr-2">•</span>
+                                    <span class="text-slate-700">
+                                        <%= ingredient.name %>
+                                        <% if (ingredient.quantity) { %>
+                                            <span class="font-medium text-emerald-600">
+                                                - <%= ingredient.quantity %>
+                                                <% if (ingredient.unit) { %> <%= ingredient.unit %><% } %>
+                                            </span>
+                                        <% } %>
+                                    </span>
+                                </li>
+                            <% }) %>
+                        </ul>
+                    </div>
+                <% } %>
+
+                <!-- Étapes -->
+                <% if (recipe.steps && recipe.steps.length > 0) { %>
+                    <div class="p-5 bg-gradient-to-r from-amber-50/50 to-pink-50/50 rounded-2xl border border-amber-100">
+                        <h5 class="text-base font-medium mb-4 text-slate-400 uppercase tracking-wide">Étapes de préparation</h5>
+                        <div class="space-y-4">
+                            <% recipe.steps.forEach(step => { %>
+                                <div class="bg-white/60 p-4 rounded-lg flex gap-4">
+                                    <div class="flex-shrink-0 w-10 h-10 bg-amber-200 text-amber-700 rounded-full flex items-center justify-center font-semibold">
+                                        <%= step.stepNumber %>
+                                    </div>
+                                    <p class="text-slate-700 flex-1 pt-1"><%= step.description %></p>
+                                </div>
+                            <% }) %>
+                        </div>
+                    </div>
+                <% } %>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="p-5 bg-gradient-to-r from-pink-50/50 to-purple-50/50 rounded-2xl border border-pink-100">
+                        <h5 class="text-base font-medium mb-2 text-slate-400 uppercase tracking-wide">Ajouté le</h5>
+                        <p class="text-lg text-slate-600 font-light"><%= recipe.createdAt.toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' }) %></p>
+                    </div>
+                    <div class="p-5 bg-gradient-to-r from-pink-50/50 to-purple-50/50 rounded-2xl border border-pink-100">
+                        <h5 class="text-base font-medium mb-2 text-slate-400 uppercase tracking-wide">Modifié le</h5>
+                        <p class="text-lg text-slate-600 font-light"><%= recipe.updatedAt.toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' }) %></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bg-gradient-to-r from-pink-50 to-purple-50 border-t border-pink-100 py-6 px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex gap-3">
+                    <a href="/recipes/<%= recipe.id %>/edit/" class="bg-amber-200 hover:bg-amber-300 text-amber-700 font-medium py-3 px-6 rounded-2xl transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">MODIFIER</a>
+                    <a href="/recipes/<%= recipe.id %>/delete" class="bg-rose-200 hover:bg-rose-300 text-rose-700 font-medium py-3 px-6 rounded-2xl transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">SUPPRIMER</a>
+                </div>
+                <a href="/recipes" class="border-2 border-slate-300 hover:bg-slate-100 text-slate-600 font-medium py-3 px-6 rounded-2xl transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                    RETOUR
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+

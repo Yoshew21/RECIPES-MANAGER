@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <%- include('../partials/head', {title: 'Category ' + category.name + ' | Category Manager'}); %>
+</head>
+<body>
+<div class="container mx-auto px-4 py-8 max-w-5xl">
+    <div class="text-center mb-8">
+        <h1 class="text-5xl font-light text-purple-300 mb-2">DÉTAILS DE LA CATÉGORIE</h1>
+    </div>
+    <div class="bg-white/70 backdrop-blur-sm shadow-xl rounded-3xl overflow-hidden border border-purple-100/50">
+        <div class="text-center bg-gradient-to-r from-purple-50 to-pink-50 py-8 px-6 border-b border-purple-100">
+            <h2 class="text-3xl font-light text-slate-600"><%= category.name %></h2>
+        </div>
+        <div class="p-8">
+            <div class="p-5 bg-gradient-to-r from-purple-50/50 to-pink-50/50 rounded-2xl border border-purple-100 mb-6">
+                <h3 class="text-base font-medium mb-2 text-slate-400 uppercase tracking-wide">Description</h3>
+                <p class="text-xl text-slate-600 font-light"><%= category.description %></p>
+            </div>
+            <div>
+                <h3 class="text-base font-medium mb-4 text-slate-400 uppercase tracking-wide">Recettes dans cette catégorie</h3>
+                <% if (recipes.length > 0) { %>
+                    <div class="grid gap-4">
+                        <% recipes.forEach(recipe => { %>
+                            <div class="bg-white/80 backdrop-blur-sm p-5 rounded-2xl border border-purple-100 shadow-sm hover:shadow-md transition-all">
+                                <div class="space-y-2">
+                                    <p class="text-slate-600">
+                                        <span class="text-slate-400 font-medium">Titre :</span> 
+                                        <span class="font-light"><%= recipe.title %></span>
+                                    </p>
+                                    <p class="text-slate-600">
+                                        <span class="text-slate-400 font-medium">Créateur :</span> 
+                                        <span class="font-light"><%= recipe.author %></span>
+                                    </p>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                <% } else { %>
+                    <div class="text-center py-8 bg-gradient-to-r from-purple-50/50 to-pink-50/50 rounded-2xl border border-purple-100">
+                        <p class="text-slate-400 font-light">Aucune recette dans cette catégorie.</p>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+        <div class="bg-gradient-to-r from-purple-50 to-pink-50 border-t border-purple-100 py-6 px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex gap-3">
+                    <a href="/categories/<%= category.id %>/edit/" class="bg-amber-200 hover:bg-amber-300 text-amber-700 font-medium py-3 px-6 rounded-2xl transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">MODIFIER</a>
+                    <a href="/categories/<%= category.id %>/delete" class="bg-rose-200 hover:bg-rose-300 text-rose-700 font-medium py-3 px-6 rounded-2xl transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">SUPPRIMER</a>
+                </div>
+                <a href="/categories" class="border-2 border-slate-300 hover:bg-slate-100 text-slate-600 font-medium py-3 px-6 rounded-2xl transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                    RETOUR
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  recipe-manager:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: recipe-manager-app
+    restart: unless-stopped
+    ports:
+      - "${SERVER_PORT:-8080}:8080"
+    environment:
+      - NODE_ENV=production
+      - SERVER_PORT=8080
+      - SQLITE_STORAGE=/app/data/recipe-manager.sqlite
+    volumes:
+      # Volume pour la base de données SQLite (persiste sur le VPS)
+      - ./data:/app/data
+      # Optionnel : volume pour les logs si nécessaire
+      # - ./logs:/app/logs
+    networks:
+      - recipe-manager-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:8080/recipes', (r) => {process.exit(r.statusCode === 200 || r.statusCode === 302 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  recipe-manager-network:
+    driver: bridge
+
+volumes:
+  # Volume nommé optionnel pour la base de données (alternative au volume bind)
+  # recipe-data:
+  #   driver: local
+

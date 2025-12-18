@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <%- include('../partials/head', {title: 'Modifier une Recette | Recipe Manager'}); %>
+</head>
+<body>
+<div class="container mx-auto px-4 py-8 max-w-4xl">
+    <div class="text-center mb-8">
+        <h1 class="text-5xl font-light text-rose-300 mb-2">ÉDITER UNE RECETTE</h1>
+    </div>
+    <div class="bg-white/70 backdrop-blur-sm shadow-xl rounded-3xl p-8 md:p-10 border border-pink-100/50">
+        <h3 class="text-center text-2xl font-light text-slate-500 mb-8">MA RECETTE</h3>
+        <%- include('./_form', {action: '/recipes/' + recipe.id + '/update', submitLabel: 'MODIFIER !', recipe: recipe, categories: categories}); %>
+    </div>
+</div>
+</body>
+</html>
