@@ -182,7 +182,7 @@ Ce projet est sous licence ISC.
 
 ## 👤 Auteur
 
-**Yoshew21**
+**Yoshew**
 
 - GitHub: [@Yoshew21](https://github.com/Yoshew21)
 
