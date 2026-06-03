@@ -1,4 +1,23 @@
 services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: recipe-manager-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=recipe_user
+      - POSTGRES_PASSWORD=recipe_password
+      - POSTGRES_DB=recipe_manager
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - recipe-manager-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U recipe_user -d recipe_manager"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
   recipe-manager:
     build:
       context: .
@@ -10,10 +29,14 @@ services:
     environment:
       - NODE_ENV=production
       - SERVER_PORT=8080
-      - SQLITE_STORAGE=/app/data/recipe-manager.sqlite
-    volumes:
-      # Utiliser un volume nommé pour éviter les problèmes de permissions sur le VPS
-      - recipe-data:/app/data
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=recipe_user
+      - DB_PASSWORD=recipe_password
+      - DB_NAME=recipe_manager
+    depends_on:
+      postgres:
+        condition: service_healthy
     networks:
       - recipe-manager-network
     healthcheck:
@@ -28,6 +51,5 @@ networks:
     driver: bridge
 
 volumes:
-  recipe-data:
+  postgres-data:
     driver: local
-

@@ -1,12 +1,5 @@
 # Dependencies
 node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-# Keep package-lock.json for reproducible installs
-# package-lock.json
-yarn.lock
-pnpm-lock.yaml
 
 # Environment variables (CRITICAL - Contains sensitive data)
 .env
@@ -15,15 +8,6 @@ pnpm-lock.yaml
 .env.test
 .env.production
 .env.*.local
-
-# Database files (SQLite databases contain data)
-*.sqlite
-*.sqlite3
-*.db
-*.db-shm
-*.db-wal
-recipe-manager*.sqlite
-recipe-manager*.db
 
 # Logs
 logs/
@@ -40,7 +24,7 @@ pids/
 *.seed
 *.pid.lock
 
-# Coverage directory used by tools like istanbul
+# Coverage
 coverage/
 *.lcov
 .nyc_output/
@@ -51,7 +35,7 @@ build/
 out/
 *.tsbuildinfo
 
-# Tailwind CSS build files
+# Tailwind CSS build output
 public/css/output.css
 public/css/output.css.map
 
@@ -59,9 +43,6 @@ public/css/output.css.map
 .DS_Store
 .DS_Store?
 ._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
 Thumbs.db
 Desktop.ini
 $RECYCLE.BIN/
@@ -72,78 +53,25 @@ $RECYCLE.BIN/
 *.swp
 *.swo
 *~
-.project
-.classpath
-.settings/
-*.sublime-project
-*.sublime-workspace
-*.code-workspace
 
 # Temporary files
 *.tmp
 *.temp
 .cache/
-.temp/
 tmp/
 temp/
 
-# Optional npm cache directory
+# npm
 .npm
-
-# Optional eslint cache
-.eslintcache
-
-# Optional REPL history
 .node_repl_history
-
-# Output of 'npm pack'
 *.tgz
-
-# Yarn Integrity file
 .yarn-integrity
-
-# parcel-bundler cache
 .parcel-cache
 
-# Next.js (if ever used)
-.next/
-
-# Nuxt.js (if ever used)
-.nuxt/
-
-# Vite (if ever used)
-.vite/
-
-# Serverless directories
-.serverless/
-
-# FuseBox cache
-.fusebox/
-
-# DynamoDB Local files
-.dynamodb/
-
-# TernJS port file
-.tern-port
-
-# Stores VSCode versions used for testing VSCode extensions
-.vscode-test
-
-# Stores database backups
-*.sql
+# Database backups
 *.backup
 backups/
 
-# Docker data directory (contains SQLite database)
-data/
-
-# Stores uploaded files (if any)
+# Uploaded files
 uploads/
 public/uploads/
-
-# Stores session data
-sessions/
-
-# Stores temporary uploads
-temp_uploads/
-

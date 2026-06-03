@@ -1,44 +1,43 @@
-# 🍳 Recipe Manager
+# Recipe Manager
 
-> Une application web moderne et intuitive pour gérer vos recettes de cuisine
+> Une application web pour gérer vos recettes de cuisine
 
-[![Node.js Version](https://img.shields.io/badge/node-%3E%3D20-brightgreen.svg)](https://nodejs.org/)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D22-brightgreen.svg)](https://nodejs.org/)
 [![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
 [![Docker](https://img.shields.io/badge/docker-ready-blue.svg)](https://www.docker.com/)
 
-## 📋 À propos
+## À propos
 
-Recipe Manager est une application web complète qui vous permet de créer, organiser et rechercher vos recettes préférées. Développée avec Node.js et Express, elle offre une interface élégante utilisant TailwindCSS et stocke vos données de manière persistante avec SQLite.
+Recipe Manager est une application web qui permet de créer, organiser et gérer vos recettes. Développée avec Node.js et Express, elle utilise PostgreSQL comme base de données et Sequelize comme ORM avec un système de migrations.
 
-### ✨ Fonctionnalités principales
+### Fonctionnalités
 
-- 📝 **Gestion complète des recettes** - Créez, modifiez et supprimez vos recettes
-- 🏷️ **Catégorisation** - Organisez vos recettes par catégories (entrées, plats, desserts, etc.)
-- 🔍 **Recherche avancée** - Trouvez vos recettes par nom, ingrédients ou catégorie
-- ⏱️ **Temps de préparation** - Suivez les temps de préparation et de cuisson
-- 📷 **Images** - Ajoutez des images à vos recettes (stockées en base64)
-- 📱 **Interface responsive** - Design moderne adapté à tous les écrans
-- 🐳 **Docker ready** - Déployez facilement avec Docker et Docker Compose
-- 💾 **Base de données SQLite** - Stockage léger et persistant
+- Gestion complète des recettes (créer, modifier, supprimer)
+- Catégorisation des recettes
+- Ingrédients avec quantités et unités
+- Étapes de préparation
+- Temps de préparation et cuisson
+- Images en base64
+- Interface responsive (TailwindCSS via CDN)
 
-## 🚀 Technologies utilisées
+## Technologies
 
-- **Backend** : Node.js, Express 5
-- **ORM** : Sequelize
-- **Base de données** : SQLite 3
-- **Template Engine** : EJS
-- **Styling** : TailwindCSS 4
-- **Conteneurisation** : Docker & Docker Compose
+| Couche | Technologie |
+|---|---|
+| Backend | Node.js 22, Express 5 |
+| ORM | Sequelize 6 + sequelize-cli |
+| Base de données | PostgreSQL 17 |
+| Templates | EJS |
+| Styling | TailwindCSS (CDN) |
+| Conteneurisation | Docker & Docker Compose |
 
-## 📦 Prérequis
+## Prérequis
 
-- Node.js >= 20.x
-- npm >= 9.x
-- Docker & Docker Compose (optionnel, pour le déploiement containerisé)
+- Node.js >= 22.x
+- npm >= 10.x
+- PostgreSQL 17 (ou Docker)
 
-## 🔧 Installation
-
-### Installation locale
+## Installation locale
 
 1. **Cloner le repository**
    ```bash
@@ -52,144 +51,138 @@ Recipe Manager est une application web complète qui vous permet de créer, orga
    ```
 
 3. **Configurer les variables d'environnement**
-   
-   Créez un fichier `.env` à la racine du projet :
+
+   Copier `.env.example` en `.env` et adapter les valeurs :
+   ```bash
+   cp .env.example .env
+   ```
    ```env
-   SERVER_PORT=8080
-   SQLITE_STORAGE=./recipe-manager.sqlite
    NODE_ENV=development
+   SERVER_PORT=3000
+   DB_HOST=localhost
+   DB_PORT=5432
+   DB_USER=postgres
+   DB_PASSWORD=postgres
+   DB_NAME=recipe_manager_dev
    ```
 
-4. **Démarrer l'application**
+4. **Lancer PostgreSQL** (via Docker si besoin)
+   ```bash
+   docker run -d --name pg-dev \
+     -e POSTGRES_USER=postgres \
+     -e POSTGRES_PASSWORD=postgres \
+     -e POSTGRES_DB=recipe_manager_dev \
+     -p 5432:5432 \
+     postgres:17-alpine
+   ```
+
+5. **Exécuter les migrations**
+   ```bash
+   npx sequelize-cli db:migrate
+   ```
+
+6. **Démarrer l'application**
    ```bash
    npm start
    ```
 
-5. **Accéder à l'application**
-   
-   Ouvrez votre navigateur et accédez à : `http://localhost:8080`
+   Accessible sur : `http://localhost:3000`
 
-### Installation avec Docker
+## Déploiement avec Docker Compose
 
-1. **Cloner le repository**
-   ```bash
-   git clone https://github.com/Yoshew21/RECIPES-MANAGER.git
-   cd RECIPES-MANAGER
-   ```
+```bash
+docker compose up -d --build
+```
 
-2. **Configurer les variables d'environnement** (optionnel)
-   
-   Créez un fichier `.env` pour personnaliser le port :
-   ```env
-   SERVER_PORT=8080
-   ```
+L'application est accessible sur `http://localhost:8080`.
 
-3. **Lancer avec Docker Compose**
-   ```bash
-   docker-compose up -d
-   ```
+Au démarrage, le conteneur app attend que PostgreSQL soit prêt (healthcheck), puis exécute automatiquement les migrations avant de lancer le serveur.
 
-4. **Accéder à l'application**
-   
-   L'application sera accessible sur : `http://localhost:8080`
+```bash
+# Arrêter
+docker compose down
 
-5. **Arrêter l'application**
-   ```bash
-   docker-compose down
-   ```
+# Arrêter et supprimer les volumes (efface les données)
+docker compose down -v
+```
 
-## 📁 Structure du projet
+## Structure du projet
 
 ```
 RECIPES-MANAGER/
 ├── app/
-│   ├── config/         # Configuration de la base de données
-│   ├── controllers/    # Logique métier (recettes, catégories)
-│   ├── models/         # Modèles Sequelize (Recipe, Category, etc.)
-│   ├── routes/         # Routes Express
-│   └── views/          # Templates EJS
-├── public/             # Assets statiques (CSS, images)
-├── data/               # Dossier pour la base de données SQLite (Docker)
-├── docker-compose.yml  # Configuration Docker Compose
-├── Dockerfile          # Configuration Docker
-├── recipe-manager-run.js  # Point d'entrée de l'application
-├── package.json        # Dépendances et scripts npm
-└── tailwind.config.js  # Configuration TailwindCSS
+│   ├── config/
+│   │   └── database.js         # Connexion Sequelize
+│   ├── controllers/            # Logique métier
+│   ├── models/                 # Modèles Sequelize
+│   ├── routes/                 # Routes Express
+│   └── views/                  # Templates EJS
+├── config/
+│   └── config.js               # Config sequelize-cli (dev/prod)
+├── database/
+│   └── migrations/             # Fichiers de migration
+├── public/
+│   └── favicon.ico
+├── .env.example                # Template des variables d'environnement
+├── .sequelizerc                # Chemins sequelize-cli
+├── docker-compose.yml
+├── Dockerfile
+├── package.json
+└── recipe-manager-run.js       # Point d'entrée
 ```
 
-## 🎯 Utilisation
+## Migrations
 
-### Gestion des recettes
+Les migrations permettent de faire évoluer le schéma sans perdre les données.
 
-1. **Créer une recette** : Cliquez sur "Nouvelle recette" et remplissez le formulaire
-2. **Ajouter des ingrédients** : Listez tous les ingrédients nécessaires avec leurs quantités
-3. **Définir les étapes** : Détaillez chaque étape de préparation
-4. **Ajouter une image** : Uploadez une photo de votre plat
-5. **Catégoriser** : Associez la recette à une catégorie
+**Créer une migration**
+```bash
+npx sequelize-cli migration:generate --name add-servings-to-recipe
+```
 
-### Recherche et filtrage
+**Appliquer les migrations**
+```bash
+npx sequelize-cli db:migrate
+```
 
-- Recherchez par **nom de recette**
-- Filtrez par **catégorie**
-- Recherchez par **ingrédients**
-- Combinez les filtres pour une recherche précise
+**Annuler la dernière migration**
+```bash
+npx sequelize-cli db:migrate:undo
+```
 
-## 🔒 Base de données
+**Exemple de migration**
+```js
+module.exports = {
+    async up(queryInterface, Sequelize) {
+        await queryInterface.addColumn('recipes', 'servings', {
+            type: Sequelize.INTEGER,
+            allowNull: true,
+        });
+    },
+    async down(queryInterface) {
+        await queryInterface.removeColumn('recipes', 'servings');
+    },
+};
+```
 
-L'application utilise SQLite avec les tables suivantes :
-- `recipes` - Informations principales des recettes
-- `categories` - Catégories de recettes
-- `recipeIngredients` - Liste des ingrédients
-- `recipeSteps` - Étapes de préparation
-- `recipeTimes` - Temps de préparation et cuisson
+## Base de données
 
-## 🐳 Docker & Production
+Tables créées par les migrations :
 
-### Healthcheck
+| Table | Description |
+|---|---|
+| `categories` | Catégories de recettes |
+| `recipes` | Recettes (titre, auteur, image, statut) |
+| `recipe_ingredients` | Ingrédients avec quantité et unité |
+| `recipe_steps` | Étapes de préparation |
+| `recipe_times` | Temps de préparation/cuisson |
 
-L'image Docker inclut un healthcheck qui vérifie que l'application répond correctement sur `/recipes`.
-
-### Volumes
-
-Les données sont persistées dans un volume Docker monté sur `./data` pour garantir la conservation de vos recettes.
-
-### Sécurité
-
-- L'application s'exécute avec un utilisateur non-root
-- Les dépendances sont optimisées pour la production
-- Le container redémarre automatiquement en cas d'erreur
-
-## 🛠️ Scripts disponibles
+## Scripts npm
 
 ```bash
-npm start          # Démarre l'application
-npm test           # Lance les tests (à implémenter)
+npm start    # Démarre l'application
 ```
 
-## 🤝 Contribution
+## Auteur
 
-Les contributions sont les bienvenues ! N'hésitez pas à :
-
-1. Fork le projet
-2. Créer une branche pour votre fonctionnalité (`git checkout -b feature/AmazingFeature`)
-3. Commit vos changements (`git commit -m 'Add some AmazingFeature'`)
-4. Push vers la branche (`git push origin feature/AmazingFeature`)
-5. Ouvrir une Pull Request
-
-## 📝 License
-
-Ce projet est sous licence ISC.
-
-## 👤 Auteur
-
-**Yoshew**
-
-- GitHub: [@Yoshew21](https://github.com/Yoshew21)
-
-## 🌟 Remerciements
-
-Merci d'utiliser Recipe Manager ! Si vous trouvez ce projet utile, n'hésitez pas à lui donner une étoile ⭐
-
----
-
-*Développé avec ❤️ et Node.js*
+**Yoshew** — [@Yoshew21](https://github.com/Yoshew21)

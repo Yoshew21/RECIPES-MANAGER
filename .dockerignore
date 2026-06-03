@@ -1,10 +1,8 @@
-# Dependencies
+# Dependencies (rebuilt in image)
 node_modules/
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
-# Environment variables
+# Environment variables (injected via docker-compose)
 .env
 .env.local
 .env.*.local
@@ -14,7 +12,7 @@ yarn-error.log*
 .gitignore
 .gitattributes
 
-# Docker
+# Docker files (not needed inside the image)
 Dockerfile
 .dockerignore
 docker-compose.yml
@@ -39,17 +37,12 @@ Thumbs.db
 logs/
 *.log
 
-# Database files (seront créés dans le volume)
-*.sqlite
-*.sqlite3
-*.db
-
 # Build outputs
 dist/
 build/
 out/
 
-# Tailwind CSS build files (optionnel, peut être généré dans le conteneur)
+# Tailwind CSS build output (not used, Tailwind is loaded via CDN)
 public/css/output.css
 public/css/output.css.map
 

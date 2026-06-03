@@ -1,4 +1,4 @@
-// npm install express sequelize sqlite3 ejs serve-favicon nodemon dotenv
+// npm install express sequelize pg pg-hstore ejs serve-favicon nodemon dotenv
 require('dotenv').config();
 const sequelize = require('./app/config/database');
 
@@ -18,7 +18,6 @@ const main = async () => {
 
     await sequelize.authenticate();
     require('./app/models');
-    await sequelize.sync();
 
     require('./app/routes/recipes')(app);
     require('./app/routes/categories')(app);
